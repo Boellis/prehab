@@ -17,17 +17,54 @@ PrehabTakehome is a full-stack workout management application. It uses Python(Fa
 ---
 
 ## Project Structure
+```
+prehab/
+├── app/                   # FastAPI backend
+│   ├── core/              # Config and security
+│   │   ├── config.py
+│   │   ├── security.py
+│   ├── db/                # Database models and session
+│   │   ├── database.py
+│   │   ├── models.py
+│   ├── routers/           # Auth, exercises, favorites, saves, ratings, list/collections
+│   │   ├── auth.py
+│   │   ├── collection.py
+│   │   ├── exercises.py
+│   │   ├── favorites.py
+│   │   ├── ratings.py
+│   │   ├── saves.py
+│   ├── schemas/           # Pydantic models
+│   │   ├── exercise.py
+│   │   ├── rating.py
+│   │   ├── token.py
+│   │   ├── user.py
+│   ├── main.py            # Entry point
+│   ├── __init__.py          
+├── test.db                # SQLite DB
+├── requirements.txt
+└── README.md
 
-
-## Project Structure
-1. 
+├── tests/                 # Unit tests
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── test_auth.py
+│   └── test_exercises.py
+├── frontend/              # React frontend
+│   ├── public/
+│   ├── src/
+│   │   ├── components/    # Login and Register Forms, Exercise and Collection Dashboards, Rate Exercise Form, and BUttona
+│   │   ├── api/           # Axios
+│   │   ├── App.tsx        
+│   │   └── main.tsx
+└── README.md
+```
 
 ## Project Setup
 ### Backend
 1. Clone the repository
 ```
 git clone https://github.com/boellis/PrehabTakehome.git
-cd PrehabTakehome
+cd prehab
 ```
 2. Create a virtual envinronment (Optional)
 ```
@@ -43,15 +80,8 @@ or
 ```
 py -m pip install -r requirements.txt
 ```
-4. Create a .env file in the root
-```
-PROJECT_NAME="Prehab Takehome"
-API_VERSION="v1"
-JWT_SECRET_KEY="SUPERSECRETKEY"
-DATABASE_URL=sqlite:///./test.db
 
-```
-5. Run FastAPI server
+4. Run FastAPI server
 From the project root, run the following in your terminal:
 ```
 uvicorn app.main:app --reload
@@ -60,6 +90,27 @@ or if you're in the app folder:
 ```
 uvicorn main:app --reload
 ```
+
+5. Create a .env file in the root
+```
+PROJECT_NAME="Prehab Takehome"
+API_VERSION="v1"
+JWT_SECRET_KEY="SUPERSECRETKEY"
+DATABASE_URL=sqlite:///./test.db
+```
+
+#### Unit Tests
+1. Tets are written using pytest.
+  - Ensure tests/'__init__.py' exists.
+
+2. Run test from the project root by running the following in your terminal:
+```
+pytest
+```
+3. Tests use an in-memory SQLite database and cover:
+  - User registration/login
+  - CRUD for exercises
+  - Save, favorite, and rate workflows
 
 
 ### Frontend
@@ -108,17 +159,6 @@ npm run dev
 
 2. Use Swagger to explore and test endpoints, view request/response formats, and see required headers or query params. Use ReDoc to view the API documentation. 
 
-## Unit Tests
-1. Tets are written using pytest.
-  - Ensure tests/'__init__.py' exists.
 
-2. Run test from the project root by running the following in your terminal:
-```
-pytest
-```
-3. Tests use an in-memory SQLite database and cover:
-  - User registration/login
-  - CRUD for exercises
-  - Save, favorite, and rate workflows
 
 

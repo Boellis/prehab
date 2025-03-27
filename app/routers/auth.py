@@ -11,7 +11,7 @@ from app.core.security import (
     decode_jwt,
 )
 from app.db.database import get_db
-from app.models import User
+from app.db.models import User
 from app.schemas.user import UserCreate, UserResponse
 from app.schemas.token import Token, RefreshTokenRequest
 

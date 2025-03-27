@@ -17,3 +17,29 @@ PrehabTakehome is a full-stack workout management application. It uses Python(Fa
 ---
 
 ## Project Structure
+├── app/                   # FastAPI backend
+│   ├── core/              # Config and security
+│   │   ├── config.py
+│   │   ├── security.py
+│   ├── db/                # Database models and session
+│   │   ├── database.py
+│   │   ├── models.py
+│   ├── routers/           # Auth, exercises, favorites, saves, ratings, list/collections
+│   │   ├── auth.py
+│   │   ├── collection.py
+│   │   ├── exercises.py
+│   │   ├── favorites.py
+│   │   ├── ratings.py
+│   │   ├── saves.py
+│   ├── schemas/           # Pydantic models
+│   │   ├── exercise.py
+│   │   ├── rating.py
+│   │   ├── token.py
+│   │   ├── user.py
+│   ├── main.py            # Entry point
+│   ├── __init__.py          
+├── test.db                # SQLite DB
+├── requirements.txt
+└── README.md
+
+## Install Dependencies

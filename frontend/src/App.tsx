@@ -56,16 +56,16 @@ const App: React.FC = () => {
 
 
   return (
-    <div style={{ display: 'flex', padding: '1rem' ,  transform: 'scale(1.75)', transformOrigin: 'top left'}}>
+    <div style={{ display: 'flex', padding: '20rem' ,  transform: 'scale(1.5)', transformOrigin: 'center left'}}>
       {/* Left side: all text and forms aligned to left */}
-      <div style={{ flex: '1', textAlign: 'left' }}>
-        <h1>Prehab Takehome</h1>
+      <div style={{ flex: '1', textAlign: 'center' }}>
+        <h1>[P]rehab Takehome</h1>
         {token && (
           <div style={{ marginBottom: '1rem' }}>
             <button onClick={handleLogout}>Logout</button>
             <button onClick={handleRefreshToken} style={{ marginLeft: '1rem' }}>Refresh Token</button>
             <button onClick={() => setView('dashboard')} style={{ marginLeft: '1rem' }}>Dashboard</button>
-            <button onClick={() => setView('collection')} style={{ marginLeft: '1rem' }}>My Collection</button>
+            <button onClick={() => setView('collection')} style={{ display: 'flex', padding: '.65rem', marginTop: '1rem',  marginLeft: '8.7rem'  }}>My Collection</button>
           </div>
         )}
 
@@ -80,7 +80,7 @@ const App: React.FC = () => {
         <img 
           src={logo} 
           alt="Prehab Takehome Logo" 
-          style={{ width: '300px', margin: '5rem' , marginTop: '0px'}}
+          style={{ width: '300px', margin: '3rem' , marginTop: '0px'}}
         />
       </div>
     </div>

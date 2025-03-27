@@ -28,13 +28,30 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitch }) => 
   };
 
   return (
-    <div>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',      // Center horizontally
+      justifyContent: 'center',  // Center vertically if parent has enough height
+      gap: '0.5rem'              // Space between items
+    }}>
       <h2>Login</h2>
-      {/* Input for username */}
-      <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
-      {/* Input for password */}
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
-      <button onClick={login}>Login</button>
+      <input
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Username"
+        style={{ padding: '0.5rem', width: '200px' }}
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        style={{ padding: '0.5rem', width: '200px' }}
+      />
+      <button onClick={login} style={{ padding: '0.5rem 1rem' }}>
+        Login
+      </button>
       <p>
         Don't have an account? <button onClick={onSwitch}>Register</button>
       </p>

@@ -151,41 +151,6 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
   return (
     <div>
       <h2>Exercises Dashboard</h2>
-      {/* Sorting, searching, favorites filter */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
-        <div>
-          <label>Sort By:</label>
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
-            <option value="difficulty">Difficulty</option>
-            <option value="name">Name</option>
-            <option value="description">Description</option>
-            <option value="favorite_count">Favorites</option>
-            <option value="save_count">Saves</option>
-          </select>
-        </div>
-
-        <div>
-          <input
-            type="text"
-            placeholder="Search exercises..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <label>
-            Show only favorites:
-            <input
-              type="checkbox"
-              checked={showOnlyFavorites}
-              onChange={() => setShowOnlyFavorites(!showOnlyFavorites)}
-              style={{ marginLeft: '0.5rem' }}
-            />
-          </label>
-        </div>
-      </div>
-
       {/* Create exercise form */}
       <div
         style={{
@@ -230,6 +195,68 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
         </label>
         <button onClick={createExercise}>Create</button>
       </div>
+
+
+      {/* Sorting, searching, favorites filter */}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
+          alignItems: 'center',
+          marginBottom: '2rem',
+          border: '1px solid #555',
+          padding: '1rem',
+          borderRadius: '4px',
+        }}
+      >
+        <h3 style={{ flexBasis: '100%', margin: '0 0 0.5rem 0' , }}>Sort and Search Exercises</h3>
+        <div>
+          <label>Sort By:</label>
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
+            <option value="difficulty">Difficulty</option>
+            <option value="name">Name</option>
+            <option value="description">Description</option>
+            <option value="favorite_count">Favorites</option>
+            <option value="save_count">Saves</option>
+          </select>
+        </div>
+
+        <div>
+          <input
+            type="text"
+            placeholder="Search exercises..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label>
+            Show only favorites:
+            <input
+              type="checkbox"
+              checked={showOnlyFavorites}
+              onChange={() => setShowOnlyFavorites(!showOnlyFavorites)}
+              style={{ marginLeft: '0.5rem' }}
+            />
+          </label>
+        </div>
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
+          alignItems: 'center',
+          marginBottom: '2rem',
+          border: '1px solid #555',
+          padding: '1rem',
+          borderRadius: '4px',
+        }}
+      >
+      <h3 style={{ flexBasis: '100%', margin: '0 0 0.5rem 0' , }}><u>Exercise List</u></h3>
 
       {/* Exercise list */}
       <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
@@ -320,6 +347,7 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
           </li>
         ))}
       </ul>
+      </div>
     </div>
   );
 };

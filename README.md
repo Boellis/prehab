@@ -103,22 +103,22 @@ npm run dev
 
 ## Accessing the API Docs
 1. Once the backend server(FastAPI) is running, navigate to:
-  a. Swagger UI: http://localhost:8000/docs
-  b. ReDoc: http://localhost:8000/redoc
+  - Swagger UI: http://localhost:8000/docs
+  - ReDoc: http://localhost:8000/redoc
 
 2. Use Swagger to explore and test endpoints, view request/response formats, and see required headers or query params. Use ReDoc to view the API documentation. 
 
 ## Unit Tests
 1. Tets are written using pytest.
-  a. Ensure tests/__init__.py exists.
+  - Ensure tests/__init__.py exists.
 
 2. Run test from the project root by running the following in your terminal:
 ```
 pytest
 ```
 3. Tests use an in-memory SQLite database and cover:
-  a. User registration/login
-  b. CRUD for exercises
-  c. Save, favorite, and rate workflows
+  - User registration/login
+  - CRUD for exercises
+  - Save, favorite, and rate workflows
 
 

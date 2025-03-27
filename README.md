@@ -1,6 +1,6 @@
 # [P]rehab Take Home
 
-This project is my attempt at a basic CRUD implementataion of a full-stack workout management application. It uses Python(FastAPI) for the backend and React + TypeScript for the frontend. If you prefer I use solely, I can move the frontend to Tkinter. If you find you are running into bugs, the easiest way to fix it is to restart both your frontend and backend.
+This project is my attempt at a basic CRUD implementataion of a full-stack workout management application. It uses Python(FastAPI) for the backend and React + TypeScript for the frontend. If you prefer I use solely Python, I can move the frontend to Tkinter. If you find you are running into bugs, the easiest way to fix it is to restart both your frontend and backend.
 
 
 ## Features
@@ -8,8 +8,8 @@ This project is my attempt at a basic CRUD implementataion of a full-stack worko
 - User authentication with JWT  
 - CRUD operations on exercises  
 - Favorite, save, and rate workouts  
-- View aggregated rating and popularity  
-- User-specific exercise management  
+- View aggregated rating and features  
+- Retrieve specific or list of exercises  
 - Search and filter by difficulty, description, title, favorites, and saves  
 - Full REST API with Swagger docs  and ReDoc
 

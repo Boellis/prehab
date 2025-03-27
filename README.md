@@ -136,7 +136,8 @@ pytest
 
 ## Notes
 1. Many of the try catch blocks have generic errors rather than explicitly stating what the errors are. With more time, I would detail out each of these.
-2. 
+2. I'd started integratinig alembic for database schema migration but realized I've crossed over the time limit by a handful of hours.
+   - The summary of that workflow is update SQLAlchemy model(e.g add new column or something similar) --> Generate migration script with `alembic revision --autogenerate -m "message'` --> Apply migration and update db schema with `alembic upgrade head`.
 
 ## Setting up the Frontend from Scratch <b>(Not Required for Testing the At Home Assessment)<b>
 1. Open a terminal in your root directory and run the following commands to create a new Vite project:

@@ -105,7 +105,7 @@ npm install
 # or
 yarn install
 ```
-4. Start React App by running the following in the terminal:
+4. Start TypeScript App by running the following in the terminal:
 ```
 npm run dev
 # or

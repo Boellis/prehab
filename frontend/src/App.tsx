@@ -59,7 +59,7 @@ const App: React.FC = () => {
         <div style={{ marginBottom: '1rem' }}>
           <button onClick={handleLogout}>Logout</button>
           <button onClick={handleRefreshToken} style={{ marginLeft: '1rem' }}>
-            🔄 Refresh Token
+            Refresh Token
           </button>
           <button onClick={() => setView('dashboard')} style={{ marginLeft: '1rem' }}>
             Dashboard

@@ -7,6 +7,8 @@ from fastapi import FastAPI
 from app.core.config import settings  # Import our settings
 from app.db.database import Base, engine
 from app.db.database import models # Import models so they're registered
+from app.routers import exercises
+
 from fastapi.middleware.cors import CORSMiddleware
 
 # Create all tables, including new models
@@ -14,6 +16,9 @@ Base.metadata.create_all(bind=engine)
 
 # Intialize FastAPI app
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.API_VERSION)
+
+#Include router for exercises
+app.include_router(exercises.router)
 
 app.add_middleware(
     CORSMiddleware,

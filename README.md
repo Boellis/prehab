@@ -1,8 +1,7 @@
-# PrehabTakehome
+# [P]rehab Take Home
 
-PrehabTakehome is a full-stack workout management application. It uses Python(FastAPI) for the backend and React + TypeScript for the frontend.
+This project is my attempt at a basic CRUD implementataion of a full-stack workout management application. It uses Python(FastAPI) for the backend and React + TypeScript for the frontend. If you prefer I use solely, I can move the frontend to Tkinter.
 
----
 
 ## Features
 
@@ -12,30 +11,67 @@ PrehabTakehome is a full-stack workout management application. It uses Python(Fa
 - View aggregated rating and popularity  
 - User-specific exercise management  
 - Search and filter by difficulty, description, title, favorites, and saves  
-- Full REST API with Swagger docs  
+- Full REST API with Swagger docs  and ReDoc
 
 ---
 
 ## Project Structure
-
-
-## Project Structure
-1. 
+```
+prehab/
+├── app/                   # FastAPI backend
+│   ├── core/              # Config and security
+│   │   ├── config.py
+│   │   ├── security.py
+│   ├── db/                # Database models and session
+│   │   ├── database.py
+│   │   ├── models.py
+│   ├── routers/           # Auth, exercises, favorites, saves, ratings, list/collections
+│   │   ├── auth.py
+│   │   ├── collection.py
+│   │   ├── exercises.py
+│   │   ├── favorites.py
+│   │   ├── ratings.py
+│   │   ├── saves.py
+│   ├── schemas/           # Pydantic models
+│   │   ├── exercise.py
+│   │   ├── rating.py
+│   │   ├── token.py
+│   │   ├── user.py
+│   ├── main.py            # Entry point
+│   ├── __init__.py          
+├── test.db                # SQLite DB
+├── requirements.txt
+└── README.md
+│
+├── tests/                 # Unit tests
+│   ├── __init__.py
+│   ├── conftest.py
+│   └── test_exercises.py
+├── frontend/              # React frontend
+│   ├── public/
+│   ├── src/
+│   │   ├── components/    # Login and Register Forms, Exercise and Collection Dashboards, Rate Exercise Form, and BUttona
+│   │   ├── api/           # Axios
+│   │   ├── App.tsx        
+│   │   └── main.tsx
+│   ├── README.md
+└── 
+```
 
 ## Project Setup
-### Backend
-1. Clone the repository
+### Setting up the Backend
+0. This project requires Python 3.10+. If you currently don't have Python 3.10 installed, you can download it here: https://www.python.org/downloads/release/python-3100/.<br></br>
+1. Clone the repository and navigate into the root directory of the project
 ```
-git clone https://github.com/boellis/PrehabTakehome.git
-cd PrehabTakehome
+git clone https://github.com/boellis/prehab.git
+cd prehab
 ```
 2. Create a virtual envinronment (Optional)
 ```
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 ```
-3. Install Dependencies
-Navigate to your projects root directory(the folder where you cloned your repository in to) and run either
+3. Install dependencies by navigating to your projects root directory(the folder where you cloned your repository) and run either
 ```
 pip install -r requirements.txt
 ```
@@ -43,15 +79,8 @@ or
 ```
 py -m pip install -r requirements.txt
 ```
-4. Create a .env file in the root
-```
-PROJECT_NAME="Prehab Takehome"
-API_VERSION="v1"
-JWT_SECRET_KEY="SUPERSECRETKEY"
-DATABASE_URL=sqlite:///./test.db
 
-```
-5. Run FastAPI server
+4. Run FastAPI server
 From the project root, run the following in your terminal:
 ```
 uvicorn app.main:app --reload
@@ -61,9 +90,8 @@ or if you're in the app folder:
 uvicorn main:app --reload
 ```
 
-
-### Frontend
-1. Go to the /frontend/ folder within your cloned project by running the following in the terminal:
+### Setting up the Frontend
+1. Navigate to the prehab/frontend/ folder within your cloned project by running the following in the terminal:
 ```
 cd frontend
 ```
@@ -79,10 +107,28 @@ npm run dev
 # or
 yarn dev
 ```
+## Accessing the API Docs
+1. Once the backend server(FastAPI) is running, navigate to:
+  - Swagger UI: http://localhost:8000/docs
+     - Use Swagger to explore and test endpoints, view request/response formats, and see required headers or query params.
+  - ReDoc: http://localhost:8000/redoc
+     - Use ReDoc to view the API documentation. 
 
+## Unit Tests
+1. Tests are written using pytest.
+  - Ensure `tests/__init__.py` exists.
 
-#### Building the Frontend
-1. Open a terminal and run the following commands to create a new Vite project:
+2. Run test from the project root by running the following in your terminal:
+```
+pytest
+```
+3. Tests use an in-memory SQLite database and cover:
+  - User registration/login
+  - CRUD for exercises
+  - Save, favorite, and rate workflows
+
+## Setting up the Frontend from Scratch <b>(Not Required for Testing the At Home Assessment)<b>
+1. Open a terminal in your root directory and run the following commands to create a new Vite project:
 
 ```
 # Create a new Vite project in a folder called "frontend" using the React + TypeScript template
@@ -99,26 +145,4 @@ npm install
 npm run dev
 ```
 3. Vite will start a dev server (usually on http://localhost:5173).
-
-
-## Accessing the API Docs
-1. Once the backend server(FastAPI) is running, navigate to:
-  - Swagger UI: http://localhost:8000/docs
-  - ReDoc: http://localhost:8000/redoc
-
-2. Use Swagger to explore and test endpoints, view request/response formats, and see required headers or query params. Use ReDoc to view the API documentation. 
-
-## Unit Tests
-1. Tets are written using pytest.
-  - Ensure tests/'__init__.py' exists.
-
-2. Run test from the project root by running the following in your terminal:
-```
-pytest
-```
-3. Tests use an in-memory SQLite database and cover:
-  - User registration/login
-  - CRUD for exercises
-  - Save, favorite, and rate workflows
-
 

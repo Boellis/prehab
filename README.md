@@ -98,7 +98,7 @@ npm install
 ```
 npm run dev
 ```
-3. Vite will start a dev server (usually on http://localhost:3000).
+3. Vite will start a dev server (usually on http://localhost:5173).
 
 
 ## Accessing the API Docs
@@ -110,7 +110,7 @@ npm run dev
 
 ## Unit Tests
 1. Tets are written using pytest.
-  - Ensure tests/__init__.py exists.
+  - Ensure tests/'__init__.py' exists.
 
 2. Run test from the project root by running the following in your terminal:
 ```

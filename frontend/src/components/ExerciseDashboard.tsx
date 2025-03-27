@@ -1,3 +1,6 @@
+/* 
+This component is the user's dashboard for interacting with all of the exercise features like search, filter, creating exercises, viewing exercisies, etc
+*/
 import React, { useEffect, useState } from 'react';
 import API from '../api/axios';
 import { FavoriteButton } from './FavoriteButton';

@@ -33,6 +33,9 @@ class ExerciseResponse(ExerciseBase):
     owner_id: int
     favorite_count: int = 0
     save_count: int = 0
+    average_rating: float = 0.0 
+
 
     class Config:
         orm_mode = True
+

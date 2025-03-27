@@ -6,8 +6,8 @@ import uvicorn
 from fastapi import FastAPI
 from app.core.config import settings  # Import our settings
 from app.db.database import Base, engine
-from app.db.database import models # Import models so they're registered
-from app.routers import exercises
+#from app.db.database import models # Import models so they're registered
+from app.routers import exercises, auth
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -19,10 +19,12 @@ app = FastAPI(title=settings.PROJECT_NAME, version=settings.API_VERSION)
 
 #Include router for exercises
 app.include_router(exercises.router)
+app.include_router(auth.router)
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # your frontend
+    allow_origins=["http://localhost:5173"],  # frontend ip address
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

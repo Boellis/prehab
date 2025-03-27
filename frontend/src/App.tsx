@@ -1,35 +1,81 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+/*
+Main App component that manages view switching between login, register, dashboard, and collection.
+*/
 
-function App() {
-  const [count, setCount] = useState(0)
+import React, { useState } from 'react';
+import { LoginForm } from './components/LoginForm';
+import { RegisterForm } from './components/RegisterForm';
+import { ExerciseDashboard } from './components/ExerciseDashboard';
+import { CollectionDashboard } from './components/CollectionDashboard';
+import API from './api/axios';
+
+const App: React.FC = () => {
+  // State to store the JWT token.
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
+  // State to manage the current view: login, register, dashboard, or collection.
+  const [view, setView] = useState<'login' | 'register' | 'dashboard' | 'collection'>(token ? 'dashboard' : 'login');
+
+  // Handle successful login by saving tokens and switching to the dashboard.
+  const handleLogin = (jwt: string, refreshToken: string) => {
+    localStorage.setItem('token', jwt);
+    localStorage.setItem('refresh_token', refreshToken);
+    setToken(jwt);
+    setView('dashboard');
+  };
+
+  // Logout by clearing tokens and switching back to login view.
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+    setToken(null);
+    setView('login');
+  };
+
+  // Handle token refresh via the backend.
+  const handleRefreshToken = async () => {
+    const storedRefreshToken = localStorage.getItem('refresh_token');
+    if (!storedRefreshToken) {
+      alert("No refresh token found. Please log in again.");
+      handleLogout();
+      return;
+    }
+
+    try {
+      const res = await API.post('/auth/refresh', { refresh_token: storedRefreshToken });
+      localStorage.setItem('token', res.data.access_token);
+      localStorage.setItem('refresh_token', res.data.refresh_token);
+      setToken(res.data.access_token);
+      alert('Token refreshed successfully!');
+    } catch {
+      alert('Token refresh failed. Please log in again.');
+      handleLogout();
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div style={{ padding: '2rem' }}>
+      <h1>Prehab Takehome</h1>
+      {token && (
+        <div style={{ marginBottom: '1rem' }}>
+          <button onClick={handleLogout}>Logout</button>
+          <button onClick={handleRefreshToken} style={{ marginLeft: '1rem' }}>
+            🔄 Refresh Token
+          </button>
+          <button onClick={() => setView('dashboard')} style={{ marginLeft: '1rem' }}>
+            Dashboard
+          </button>
+          <button onClick={() => setView('collection')} style={{ marginLeft: '1rem' }}>
+            My Collection
+          </button>
+        </div>
+      )}
 
-export default App
+      {view === 'login' && <LoginForm onSuccess={handleLogin} onSwitch={() => setView('register')} />}
+      {view === 'register' && <RegisterForm onSuccess={() => setView('login')} onSwitch={() => setView('login')} />}
+      {view === 'dashboard' && token && <ExerciseDashboard token={token} />}
+      {view === 'collection' && token && <CollectionDashboard />}
+    </div>
+  );
+};
+
+export default App;

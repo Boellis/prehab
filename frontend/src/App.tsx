@@ -53,8 +53,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>Prehab Takehome</h1>
+    <div style={{ padding: '2rem', transform: 'scale(1.75)', transformOrigin: 'top left' }}>
+      <h1>[P]rehab Takehome</h1>
       {token && (
         <div style={{ marginBottom: '1rem' }}>
           <button onClick={handleLogout}>Logout</button>

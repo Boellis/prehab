@@ -17,29 +17,31 @@ PrehabTakehome is a full-stack workout management application. It uses Python(Fa
 ---
 
 ## Project Structure
-├── app/                   # FastAPI backend
-│   ├── core/              # Config and security
-│   │   ├── config.py
-│   │   ├── security.py
-│   ├── db/                # Database models and session
-│   │   ├── database.py
-│   │   ├── models.py
-│   ├── routers/           # Auth, exercises, favorites, saves, ratings, list/collections
-│   │   ├── auth.py
-│   │   ├── collection.py
-│   │   ├── exercises.py
-│   │   ├── favorites.py
-│   │   ├── ratings.py
-│   │   ├── saves.py
-│   ├── schemas/           # Pydantic models
-│   │   ├── exercise.py
-│   │   ├── rating.py
-│   │   ├── token.py
-│   │   ├── user.py
-│   ├── main.py            # Entry point
-│   ├── __init__.py          
-├── test.db                # SQLite DB
-├── requirements.txt
-└── README.md
 
 ## Install Dependencies
+
+## Project Structure
+1. 
+
+## Project Setup
+# Backend
+
+# Frontend
+1. Open a terminal and run the following commands to create a new Vite project:
+
+```
+# Create a new Vite project in a folder called "frontend" using the React + TypeScript template
+npx create-vite@latest frontend --template react-ts
+
+# Change directory into the project
+cd frontend
+
+# Install dependencies
+npm install
+```
+2. Once installed, you can run the development server:
+```
+npm run dev
+```
+3. Vite will start a dev server (usually on http://localhost:3000).
+

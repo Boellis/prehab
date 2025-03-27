@@ -5,8 +5,19 @@ FastAPI app to test config and database.
 import uvicorn
 from fastapi import FastAPI
 from app.core.config import settings  # Import our settings
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.API_VERSION)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # your frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/test")
 def test():

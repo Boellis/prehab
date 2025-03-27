@@ -17,9 +17,12 @@ from app.db.database import Base
 class User(Base):
     """
     User model:
-    - id (PK)
-    - username (unique)
-    - hashed_password
+    - id: primary key
+    - username: unique
+    - hashed_password: the password hash
+    - favorites: relationship to 'Favorite' table
+    - saved_exercises: relationship to 'Saved' table
+    - ratings: relationship to 'Rating' table
     """
     __tablename__ = "users"
 
@@ -34,12 +37,12 @@ class User(Base):
 class Exercise(Base):
     """
     Exercise model:
-    - id (PK)
+    - id (Primary Key)
     - name
     - description
-    - difficulty
-    - is_public
-    - owner_id (FK to User)
+    - difficulty (1-5)
+    - is_public (boolean)
+    - owner_id (Foreign Key to User)
     """
     __tablename__ = "exercises"
 
@@ -50,6 +53,7 @@ class Exercise(Base):
     is_public = Column(Boolean, nullable=False, default=True)
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
+    # Multi column index
     __table_args__ = (
         Index("idx_exercises_owner_public", "owner_id", "is_public"),
     )
@@ -57,8 +61,8 @@ class Exercise(Base):
 class Favorite(Base):
     """
     Favorite model:
-    - user_id (FK to User)
-    - exercise_id (FK to Exercise)
+    - user_id (Foreign Key to User)
+    - exercise_id (Foreign Key to Exercise)
     - unique combo (user_id, exercise_id)
     """
     __tablename__ = "favorites"
@@ -76,8 +80,8 @@ class Favorite(Base):
 class Saved(Base):
     """
     Saved model:
-    - user_id (FK to User)
-    - exercise_id (FK to Exercise)
+    - user_id (Foreign Key to User)
+    - exercise_id (Foreign Key to Exercise)
     - unique combo (user_id, exercise_id)
     """
     __tablename__ = "saved"
@@ -95,8 +99,8 @@ class Saved(Base):
 class Rating(Base):
     """
     Rating model:
-    - user_id (FK to User)
-    - exercise_id (FK to Exercise)
+    - user_id (Foreign Key to User)
+    - exercise_id (Foreign Key to Exercise)
     - rating (1-5)
     - unique combo (user_id, exercise_id)
     """

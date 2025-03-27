@@ -1,5 +1,5 @@
 """
-Module uses Pydantic's BaseSettings to centralize and manage the app's configuration.
+This uses Pydantic's BaseSettings to centralize and manage the app's configuration.
 It allows settings to be defined as environment variables or fallback to default values.
 """
 

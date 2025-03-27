@@ -1,6 +1,3 @@
-/*
-Dashboard to display and manage exercises. This component lists exercises and provides controls for editing, deleting, favoriting, saving, and rating an exercise.
-*/
 import React, { useEffect, useState } from 'react';
 import API from '../api/axios';
 import { FavoriteButton } from './FavoriteButton';
@@ -32,24 +29,22 @@ interface ExerciseDashboardProps {
 
 export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
-  // States for new exercise creation.
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [difficulty, setDifficulty] = useState('');
   const [isPublic, setIsPublic] = useState(true);
-  // States for editing an exercise.
+
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState('');
   const [editDescription, setEditDescription] = useState('');
   const [editDifficulty, setEditDifficulty] = useState('');
   const [editIsPublic, setEditIsPublic] = useState(true);
-  // Additional state for search, sorting, and viewing user lists.
+
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState<'difficulty' | 'name' | 'description' | 'favorite_count' | 'save_count'>('difficulty');
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [userLists, setUserLists] = useState<{ [key: number]: { favorited_by: User[]; saved_by: User[] } | null }>({});
 
-  // Fetch exercises from the backend.
   const fetchExercises = async () => {
     try {
       const res = await API.get('/exercises/');
@@ -63,7 +58,6 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
     fetchExercises();
   }, []);
 
-  // Function to create a new exercise.
   const createExercise = async () => {
     try {
       await API.post('/exercises/', {
@@ -72,7 +66,6 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
         difficulty: Number(difficulty),
         is_public: isPublic,
       });
-      // Reset form fields.
       setName('');
       setDescription('');
       setDifficulty('');
@@ -83,7 +76,6 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
     }
   };
 
-  // Function to delete an exercise.
   const deleteExercise = async (id: number) => {
     try {
       await API.delete(`/exercises/${id}`);
@@ -93,7 +85,6 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
     }
   };
 
-  // Function to start editing an exercise.
   const startEdit = (ex: Exercise) => {
     setEditingId(ex.id);
     setEditName(ex.name);
@@ -102,7 +93,6 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
     setEditIsPublic(ex.is_public);
   };
 
-  // Function to save edited changes.
   const saveEdit = async (id: number) => {
     try {
       await API.put(`/exercises/${id}`, {
@@ -118,7 +108,6 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
     }
   };
 
-  // Fetch the list of users who favorited/saved an exercise.
   const fetchUserList = async (exerciseId: number) => {
     try {
       const res = await API.get(`/exercises/${exerciseId}/users`);
@@ -162,120 +151,170 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
   return (
     <div>
       <h2>Exercises Dashboard</h2>
-      
-      <div style={{ marginBottom: '1rem' }}>
-        <label>Sort By:</label>
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
-          <option value="difficulty">Difficulty</option>
-          <option value="name">Name</option>
-          <option value="description">Description</option>
-          <option value="favorite_count">Favorites</option>
-          <option value="save_count">Saves</option>
-        </select>
+      {/* Sorting, searching, favorites filter */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div>
+          <label>Sort By:</label>
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value as any)}>
+            <option value="difficulty">Difficulty</option>
+            <option value="name">Name</option>
+            <option value="description">Description</option>
+            <option value="favorite_count">Favorites</option>
+            <option value="save_count">Saves</option>
+          </select>
+        </div>
 
-        <input
-          type="text"
-          placeholder="Search exercises..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ marginLeft: '1rem' }}
-        />
-        <label style={{ marginLeft: '1rem' }}>
-          Show only favorites:
+        <div>
           <input
-            type="checkbox"
-            checked={showOnlyFavorites}
-            onChange={() => setShowOnlyFavorites(!showOnlyFavorites)}
+            type="text"
+            placeholder="Search exercises..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
-        </label>
+        </div>
+
+        <div>
+          <label>
+            Show only favorites:
+            <input
+              type="checkbox"
+              checked={showOnlyFavorites}
+              onChange={() => setShowOnlyFavorites(!showOnlyFavorites)}
+              style={{ marginLeft: '0.5rem' }}
+            />
+          </label>
+        </div>
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <h3>Create New Exercise</h3>
-        <input placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
+      {/* Create exercise form */}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '0.5rem',
+          alignItems: 'center',
+          marginBottom: '2rem',
+          border: '1px solid #555',
+          padding: '1rem',
+          borderRadius: '4px',
+        }}
+      >
+        <h3 style={{ flexBasis: '100%', margin: '0 0 0.5rem 0' , }}>Create New Exercise</h3>
+        <input
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          style={{ flex: '1 1 150px' }}
+        />
+        <input
+          placeholder="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          style={{ flex: '2 1 300px' }}
+        />
         <input
           type="number"
           placeholder="Difficulty"
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
+          style={{ width: '80px' }}
         />
-        <label>
+        <label style={{ display: 'flex', alignItems: 'left',  padding: '0.5rem', marginTop: '0.25rem',justifyContent: 'center'  }}>
           Public:
-          <input type="checkbox" checked={isPublic} onChange={() => setIsPublic(!isPublic)} />
+          <input
+            type="checkbox"
+            checked={isPublic}
+            onChange={() => setIsPublic(!isPublic)}
+            style={{ marginLeft: '0.5rem' }}
+          />
         </label>
         <button onClick={createExercise}>Create</button>
       </div>
 
-      <ul>
+      {/* Exercise list */}
+      <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
         {filtered.map((ex) => (
-          <li key={ex.id} style={{ marginBottom: '1rem', borderBottom: '1px solid #ccc', paddingBottom: '1rem' }}>
+          <li
+            key={ex.id}
+            style={{
+              marginBottom: '1.5rem',
+              borderBottom: '1px solid #555',
+              paddingBottom: '1rem',
+            }}
+          >
+            {/* Editing an exercise */}
             {editingId === ex.id ? (
-              <div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' }}>
                 <input value={editName} onChange={(e) => setEditName(e.target.value)} />
                 <input value={editDescription} onChange={(e) => setEditDescription(e.target.value)} />
                 <input
                   type="number"
                   value={editDifficulty}
                   onChange={(e) => setEditDifficulty(e.target.value)}
+                  style={{ width: '80px' }}
                 />
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center' }}>
                   Public:
                   <input
                     type="checkbox"
                     checked={editIsPublic}
                     onChange={() => setEditIsPublic(!editIsPublic)}
+                    style={{ marginLeft: '0.5rem' }}
                   />
                 </label>
                 <button onClick={() => saveEdit(ex.id)}>Save</button>
                 <button onClick={() => setEditingId(null)}>Cancel</button>
               </div>
             ) : (
-              <div>
-                <strong>{ex.name}</strong> - {ex.description} (Difficulty: {ex.difficulty}) [{ex.is_public ? 'Public' : 'Private'}]
-                <br />
-                Favorites: {ex.favorite_count} | Saves: {ex.save_count} | Average Rating: {ex.average_rating}
-                <br />
-                <FavoriteButton
-                  exerciseId={ex.id}
-                  initiallyFavorited={ex.user_has_favorited}
-                  onToggle={fetchExercises}
-                />
-                <SaveButton
-                  exerciseId={ex.id}
-                  initiallySaved={ex.user_has_saved}
-                  onToggle={fetchExercises}
-                />
-                <RateExerciseForm
-                  exerciseId={ex.id}
-                  onRate={(rating) => {
-                    console.log(`Rated exercise ${ex.id} with rating ${rating}`);
-                    fetchExercises();
-                  }}
-                />
-                <br />
-                <button onClick={() => toggleUserList(ex.id)}>
-                  {userLists[ex.id] ? 'Hide Users' : 'View Users'}
-                </button>
-                {userLists[ex.id] && (
-                  <div style={{ marginTop: '0.5rem' }}>
-                    <strong>Favorited By:</strong>
-                    <ul>
-                      {userLists[ex.id]?.favorited_by.map((user) => (
-                        <li key={user.id}>{user.username}</li>
-                      ))}
-                    </ul>
-                    <strong>Saved By:</strong>
-                    <ul>
-                      {userLists[ex.id]?.saved_by.map((user) => (
-                        <li key={user.id}>{user.username}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                <br />
-                <button onClick={() => startEdit(ex)}>Edit</button>
-                <button onClick={() => deleteExercise(ex.id)}>Delete</button>
+              <>
+                <div style={{ marginBottom: '0.5rem' }}>
+                  <strong>{ex.name}</strong> - {ex.description} (Difficulty: {ex.difficulty}){' '}
+                  [{ex.is_public ? 'Public' : 'Private'}]
+                </div>
+                <div style={{ marginBottom: '0.5rem' }}>
+                  Favorites: {ex.favorite_count} | Saves: {ex.save_count} | Average Rating: {ex.average_rating}
+                </div>
+              </>
+            )}
+
+            {/* Action buttons (favorite, save, rating, user list, edit, delete) */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' , padding: '0.5rem', marginTop: '0.25rem', alignItems: 'center',justifyContent: 'center' }}>
+              <FavoriteButton exerciseId={ex.id} initiallyFavorited={ex.user_has_favorited} onToggle={fetchExercises} />
+              <SaveButton exerciseId={ex.id} initiallySaved={ex.user_has_saved} onToggle={fetchExercises} />
+              
+              <button onClick={() => toggleUserList(ex.id)}>
+                {userLists[ex.id] ? 'Hide Users' : 'View Users'}
+              </button>
+              {editingId !== ex.id && (
+                <>
+                  <button onClick={() => startEdit(ex)}>Edit</button>
+                  <button onClick={() => deleteExercise(ex.id)}>Delete</button>
+                </>
+              )}
+              <RateExerciseForm
+                exerciseId={ex.id}
+                onRate={(rating) => {
+                  console.log(`Rated exercise ${ex.id} with rating ${rating}`);
+                  fetchExercises();
+                }}
+              />
+            </div>
+
+            {/* Show favorited/saved users if toggled */}
+            {userLists[ex.id] && (
+              <div style={{ marginTop: '0.5rem', alignItems: 'center',justifyContent: 'center' }}>
+                <strong>Favorited By:</strong>
+                <ul style={{ padding: '0.5rem', marginTop: '0.25rem', alignItems: 'center',justifyContent: 'center' }}>
+                  {userLists[ex.id]?.favorited_by.map((user) => (
+                    <li key={user.id}>{user.username}</li>
+                  ))}
+                </ul>
+                <strong>Saved By:</strong>
+                <ul style={{ padding: '0.5rem', marginTop: '0.25rem', alignItems: 'center',justifyContent: 'center'  }}>
+                  {userLists[ex.id]?.saved_by.map((user) => (
+                    <li key={user.id}>{user.username}</li>
+                  ))}
+                </ul>
               </div>
             )}
           </li>

@@ -28,11 +28,30 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitch 
   };
 
   return (
-    <div>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',      // Center horizontally
+      justifyContent: 'center',  // Center vertically if parent has enough height
+      gap: '0.5rem'              // Space between items
+    }}>
       <h2>Register</h2>
-      <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" />
-      <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
-      <button onClick={register}>Register</button>
+      <input
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Username"
+        style={{ padding: '0.5rem', width: '200px' }}
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        style={{ padding: '0.5rem', width: '200px' }}
+      />
+      <button onClick={register} style={{ padding: '0.5rem 1rem' }}>
+        Register
+      </button>
       <p>
         Already have an account? <button onClick={onSwitch}>Login</button>
       </p>

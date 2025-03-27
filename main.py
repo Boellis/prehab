@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from app.core.config import settings  # Import our settings
 from app.db.database import Base, engine
 #from app.db.database import models # Import models so they're registered
-from app.routers import exercises, auth, favorites, saves 
+from app.routers import exercises, auth, favorites, saves, ratings
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -22,6 +22,7 @@ app.include_router(exercises.router)
 app.include_router(auth.router)
 app.include_router(favorites.router)
 app.include_router(saves.router)
+app.include_router(ratings.router)
 
 
 

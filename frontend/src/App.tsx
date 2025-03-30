@@ -7,6 +7,8 @@ import { LoginForm } from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
 import { ExerciseDashboard } from './components/ExerciseDashboard';
 import { CollectionDashboard } from './components/CollectionDashboard';
+import { AdminDashboard } from './components/AdminDashboard';
+
 import API from './api/axios';
 import logo from './assets/logo.png';
 
@@ -14,7 +16,7 @@ const App: React.FC = () => {
   // State to store the JWT token.
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
   // State to manage the current view: login, register, dashboard, or collection.
-  const [view, setView] = useState<'login' | 'register' | 'dashboard' | 'collection'>(token ? 'dashboard' : 'login');
+  const [view, setView] = useState<'login' | 'register' | 'dashboard' | 'collection' | 'admin'>(token ? 'dashboard' : 'login');
 
   // Handle successful login by saving tokens and switching to the dashboard.
   const handleLogin = (jwt: string, refreshToken: string) => {
@@ -66,6 +68,7 @@ const App: React.FC = () => {
             <button onClick={handleRefreshToken} style={{ marginLeft: '1rem' }}>Refresh Token</button>
             <button onClick={() => setView('dashboard')} style={{ marginLeft: '1rem' }}>Dashboard</button>
             <button onClick={() => setView('collection')} style={{ display: 'flex', padding: '.65rem', marginTop: '1rem',  marginLeft: '8.7rem'  }}>My Collection</button>
+            <button onClick={() => setView('admin')} style={{ marginLeft: '1rem' }}>Admin Dashboard</button>
           </div>
         )}
 
@@ -73,6 +76,8 @@ const App: React.FC = () => {
         {view === 'register' && <RegisterForm onSuccess={() => setView('login')} onSwitch={() => setView('login')} />}
         {view === 'dashboard' && token && <ExerciseDashboard token={token} />}
         {view === 'collection' && token && <CollectionDashboard />}
+        {view === 'admin' && token && <AdminDashboard />}
+
       </div>
 
       {/* Right side: Logo on the right half */}

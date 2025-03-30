@@ -52,6 +52,7 @@ class Exercise(Base):
     difficulty = Column(Integer, nullable=False, default=1)
     is_public = Column(Boolean, nullable=False, default=True)
     owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    video_url = Column(String, nullable=True)  # New field for video URL
 
     # Multi column index
     __table_args__ = (

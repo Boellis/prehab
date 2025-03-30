@@ -40,6 +40,7 @@ prehab/
 │   ├── main.py            # Entry point
 │   ├── __init__.py          
 ├── test.db                # SQLite DB
+├── alembic.ini            # Database configuration file for migration
 ├── requirements.txt
 └── README.md
 │
@@ -55,6 +56,22 @@ prehab/
 │   │   ├── App.tsx        
 │   │   └── main.tsx
 │   ├── README.md
+│
+├── java_backend_migration/             # Java Database Schema, Creation, and Data export
+│   ├── target/                         # Maven genreated files
+│   │   ├── h2-2.1.212.jar                             # H2 Database Jar
+│   │   ├── java-backend-migration-1.0.jar             # Jar Generated from pom.xml
+│   ├── src/main/java/com/prehab/
+│   │   ├── Database.java               # Handles H2 DB Creation 
+│   │   ├── ExportData.java             # Handles Exporting DB to CSV
+│   │   ├── InsertSampleData.java       # Handles adding data to DB
+│   │   ├── Main.java                   # Handles scripts to creating, insert data, and export data to and from database
+│   ├── pom.xml
+│   
+├── alembic/                # Python Database migrations
+│   ├── env.py              # Alembic file to run database migrations
+│   ├── versions/                         
+│   │   ├── <your_revision_id>_intial_schema.py    # Generated file that handles csv to db conversions. Refer to example in repo for code. 
 └── 
 ```
 

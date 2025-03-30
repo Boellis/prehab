@@ -1,6 +1,6 @@
 # [P]rehab Take Home
 
-This project is my attempt at a basic CRUD implementataion of a full-stack workout management application. It uses Python(FastAPI) for the backend and React + TypeScript for the frontend. If you prefer I use solely Python, I can move the frontend to Tkinter. If you find you are running into bugs, the easiest way to fix it is to restart both your frontend and backend.
+This project is a brief showcase of my programming and problem solving skills; built to demonstrate my readiness for the Backend Software Engineer role you all have open on your page. I designed the backend using FastAPI (Python) and the frontend with TypeScript, focusing on creating a project that's secure and scalable. The project also includes a fully functional REST API, JWT-based authentication, and a migration pipeline that transfers data from Java H2 to SQLite using Alembic.
 
 
 ## Features
@@ -12,9 +12,21 @@ This project is my attempt at a basic CRUD implementataion of a full-stack worko
 - Retrieve specific or list of exercises  
 - Search and filter by difficulty, description, title, favorites, and saves  
 - Full REST API with Swagger docs  and ReDoc
+- Migration pipleine for Java H2 to Python SQLite
 
 ---
 
+**Tech Stack:**
+
+| Area         | Technologies Used                                       |
+|--------------|---------------------------------------------------------|
+| Backend      | Python (FastAPI, SQLite, SQLAlchemy, Alembic)           |
+| Frontend     | TypeScript (Axios, Vite)                                |
+| Auth         | JWT tokens                                              |
+| Testing      | pytest                                                  |
+| Migration    | Java, H2 Database, Apache Maven, CSV Exports, Alembic   |
+
+---
 ## Project Structure
 ```
 prehab/
@@ -51,7 +63,7 @@ prehab/
 ├── frontend/              # React frontend
 │   ├── public/
 │   ├── src/
-│   │   ├── components/    # Login and Register Forms, Exercise and Collection Dashboards, Rate Exercise Form, and BUttona
+│   │   ├── components/    # Login and Register Forms, Exercise and Collection Dashboards, Rate Exercise Form, and Buttons
 │   │   ├── api/           # Axios
 │   │   ├── App.tsx        
 │   │   └── main.tsx
@@ -71,7 +83,7 @@ prehab/
 ├── alembic/                # Python Database migrations
 │   ├── env.py              # Alembic file to run database migrations
 │   ├── versions/                         
-│   │   ├── <your_revision_id>_intial_schema.py    # Generated file that handles csv to db conversions. Refer to example in repo for code. 
+│   │   ├── <generated_revision_id>_intial_schema.py        # Generated file that handles csv to db conversions. Refer to example in repo for code. 
 └── 
 ```
 

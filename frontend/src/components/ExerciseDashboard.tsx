@@ -1,11 +1,16 @@
 /* 
-This component is the user's dashboard for interacting with all of the exercise features like search, filter, creating exercises, viewing exercisies, etc
+Displays and manages exercises. Now includes: 
+1. A video player if an exercise has a video_url.
+2. The VideoUploader component for uploading videos.
+3. Updated layout with flex containers, gaps, and margins.
 */
 import React, { useEffect, useState } from 'react';
 import API from '../api/axios';
 import { FavoriteButton } from './FavoriteButton';
 import { SaveButton } from './SaveButton';
 import { RateExerciseForm } from './RateExerciseForm';
+import { VideoUploader } from './VideoUploader';
+
 
 interface Exercise {
   id: number;
@@ -19,6 +24,7 @@ interface Exercise {
   user_has_favorited: boolean;
   user_has_saved: boolean;
   average_rating: number;
+  video_url?: string;
 }
 
 interface User {
@@ -306,6 +312,28 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
                 </div>
               </>
             )}
+
+            {ex.video_url && (
+              <div style={{ marginBottom: '0.5rem' }}>
+                  <video width="320" height="240" controls>
+                    <source src={ex.video_url} type="video/mp4" />
+                      Your browser does not support the video tag.
+                  </video>
+              </div>
+            )}
+    
+            <div style={{ marginBottom: '0.5rem' }}>
+              <VideoUploader exerciseId={ex.id}
+                onUpload={async (videoUrl) => {
+                    try {
+                      await API.put(`/exercises/${ex.id}`, { video_url: videoUrl });
+                        fetchExercises();
+                    } catch (error) {
+                        alert('Failed to update exercise with video URL');
+                    }
+                  }}
+                />
+            </div>
 
             {/* Action buttons (favorite, save, rating, user list, edit, delete) */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' , padding: '0.5rem', marginTop: '0.25rem', alignItems: 'center',justifyContent: 'center' }}>

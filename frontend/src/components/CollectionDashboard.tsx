@@ -39,11 +39,9 @@ export const CollectionDashboard: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',
-        border: '1px solid #ccc',
         padding: '1rem',
-        borderRadius: '8px',
         marginBottom: '2rem',
-        transform: 'scale(1.75)', 
+        //transform: 'scale(1.75)', 
         
       }}>
       <br></br>

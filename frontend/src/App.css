@@ -48,3 +48,23 @@ html {
 .read-the-docs {
   color: #888;
 }
+
+.app-container {
+  display: flex;
+  padding: 2rem; /* a base padding */
+  /* Instead of scaling via transform, set the font-size (or use rem units) so that things are bigger */
+  font-size: 1.5rem; /* Adjust as needed */
+  align-items: flex-start; /* left-justify content */
+  transform: scale(1.5);
+  transform-origin: center;
+
+}
+
+/* For components that need left justification, use a common class */
+.left-justified {
+  text-align: left;
+  align-items: flex-start;
+  /* Remove any centering from the component */
+  margin: 0 auto;
+  max-width: 100%;
+}

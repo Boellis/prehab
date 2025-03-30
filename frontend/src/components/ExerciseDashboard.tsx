@@ -170,7 +170,7 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token, use
     });
 
   return (
-    <div style={{transform: 'scale(1)', transformOrigin: 'center left'}}>
+    <div style={{transformOrigin: 'center left'}}>
 
       <h2>Exercises Dashboard</h2>
       {/* Create exercise form */}

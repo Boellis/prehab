@@ -11,8 +11,15 @@ This project is a brief showcase of my programming and problem solving skills; b
 - View aggregated rating and features  
 - Retrieve specific or list of exercises  
 - Search and filter by difficulty, description, title, favorites, and saves  
-- Full REST API with Swagger docs  and ReDoc
+- Full REST API with Swagger UI  and ReDoc
 - Migration pipleine for Java H2 to Python SQLite
+- Video uploads for exercises (stored in Firebase Cloud Storage)
+- Admin Dashboard with:
+   - Data source toggling (local vs. cloud)
+   - Data migration from SQLite to Firestore
+   - CSV upload functionality (to process multiple CSVs from Java backend migration)
+
+
 
 ---
 
@@ -36,55 +43,69 @@ prehab/
 │   │   ├── security.py
 │   ├── db/                # Database models and session
 │   │   ├── database.py
-│   │   ├── models.py
-│   ├── routers/           # Auth, exercises, favorites, saves, ratings, list/collections
+│   │   ├── models.py      # Updated to include video_url field
+│   ├── routers/           # API endpoints for auth, exercises, favorites, saves, ratings, collection, migrate
 │   │   ├── auth.py
 │   │   ├── collection.py
-│   │   ├── exercises.py
+│   │   ├── exercises.py   # Updated for video_url and cloud toggle support
 │   │   ├── favorites.py
 │   │   ├── ratings.py
 │   │   ├── saves.py
+│   │   └── migrate.py     # Migration endpoint: SQLite -> Firestore, CSV upload placeholder
 │   ├── schemas/           # Pydantic models
-│   │   ├── exercise.py
+│   │   ├── exercise.py    # Updated for video_url support
 │   │   ├── rating.py
 │   │   ├── token.py
-│   │   ├── user.py
-│   ├── main.py            # Entry point
-│   ├── __init__.py          
-├── test.db                # SQLite DB
-├── alembic.ini            # Database configuration file for migration
+│   │   └── user.py
+│   ├── firebase_admin.py  # Firebase Admin initialization
+│   ├── main.py            # Entry point (includes new routers)
+│   └── __init__.py          
+├── test.db                # SQLite database
+├── alembic.ini            # Database migration configuration
 ├── requirements.txt
 └── README.md
 │
-├── tests/                 # Unit tests
+├── tests/                 # Unit tests (pytest)
 │   ├── __init__.py
 │   ├── conftest.py
 │   └── test_exercises.py
 ├── frontend/              # React frontend
 │   ├── public/
 │   ├── src/
-│   │   ├── components/    # Login and Register Forms, Exercise and Collection Dashboards, Rate Exercise Form, and Buttons
-│   │   ├── api/           # Axios
-│   │   ├── App.tsx        
+│   │   ├── components/    
+│   │   │   ├── LoginForm.tsx
+│   │   │   ├── RegisterForm.tsx
+│   │   │   ├── ExerciseDashboard.tsx   # Updated for video player/uploader and improved layout
+│   │   │   ├── CollectionDashboard.tsx
+│   │   │   ├── FavoriteButton.tsx
+│   │   │   ├── SaveButton.tsx
+│   │   │   ├── RateExerciseForm.tsx
+│   │   │   ├── VideoUploader.tsx         # Video upload component (Firebase Cloud Storage)
+│   │   │   └── AdminDashboard.tsx        # Admin page for toggling data sources and migration
+│   │   ├── api/           # Axios and Firebase client initialization
+│   │   │   ├── axios.ts
+│   │   │   └── firebase.ts               # Firebase configuration for frontend
+│   │   ├── App.tsx        # Updated to include global useCloudData state and AdminDashboard navigation
 │   │   └── main.tsx
-│   ├── README.md
+│   └── README.md
 │
-├── java_backend_migration/             # Java Database Schema, Creation, and Data export
-│   ├── target/                         # Maven genreated files
-│   │   ├── h2-2.1.212.jar                             # H2 Database Jar
-│   │   ├── java-backend-migration-1.0.jar             # Jar Generated from pom.xml
+├── java_backend_migration/             # Java migration scripts and CSV exports
+│   ├── target/                         
+│   │   ├── h2-2.1.212.jar              
+│   │   ├── java-backend-migration-1.0.jar
 │   ├── src/main/java/com/prehab/
-│   │   ├── Database.java               # Handles H2 DB Creation 
-│   │   ├── ExportData.java             # Handles Exporting DB to CSV
-│   │   ├── InsertSampleData.java       # Handles adding data to DB
-│   │   ├── Main.java                   # Handles scripts to creating, insert data, and export data to and from database
+│   │   ├── Database.java               
+│   │   ├── ExportData.java             
+│   │   ├── InsertSampleData.java       
+│   │   ├── Main.java                   
 │   ├── pom.xml
 │   
-├── alembic/                # Python Database migrations
-│   ├── env.py              # Alembic file to run database migrations
+├── alembic/                # Alembic migrations
+│   ├── env.py              
 │   ├── versions/                         
-│   │   ├── <generated_revision_id>_intial_schema.py        # Generated file that handles csv to db conversions. Refer to example in repo for code. 
+│   │   ├── bf7224325043_initial_schema.py  # Updated initial schema migration file
 └── 
+
 ```
 
 ## Project Setup
@@ -109,15 +130,20 @@ or
 py -m pip install -r requirements.txt
 ```
 
-4. Run FastAPI server
+4. (Optional) Only follow this step if you have already setup an alembic schema and are looking to do a migration. Otherwise, skip this step and move on to step 5. If this is your first time setting up this project, you can assume you'll skip directly to step 5. 
+From the project root, run the following in your terminal:
+```
+alembic upgrade head
+```
+
+5. Run FastAPI server
 From the project root, run the following in your terminal:
 ```
 uvicorn app.main:app --reload
 ```
-or if you're in the app folder:
-```
-uvicorn main:app --reload
-```
+
+
+
 
 ### Setting up the Frontend
 1. In a new terminal, navigate to the prehab/frontend/ folder within your cloned project by running the following in the terminal:
@@ -220,8 +246,12 @@ How to setup the migration pipeline for transferring data from a Java H2 databas
      alembic revision --autogenerate -m "initial schema"
      alembic upgrade head
      ```
+   - If you already have a schema and are just updating it, you can just run: 
+      `
+      alembic upgrade head
+      `
   
-3. **Data Migration**
+4. **Data Migration**
    - Create a new revision to import CSV data by running the following command in your terminal from the root directory: `alembic revision -m "migrate data from H2 export"`
    - Edit the generated revision file (for example, see the example code in `alembic/version/bf7224325043_initial_schema.py`) to load CSV files, then save your changes.
    - Run the migration by running the following command in your terminal from the doot directory: `alembic upgrade head`.

@@ -17,7 +17,7 @@ from app.schemas.exercise import (
 from app.core.security import get_current_user_id
 
 # Firestore client
-from app.firebase_admin import db_firestore  
+from app.firebase_setup import db_firestore, bucket
 
 router = APIRouter(prefix="/exercises", tags=["Exercises"])
 
@@ -39,7 +39,16 @@ def get_exercises(
         response_list = []
         for doc in exercises_firestore:
             data = doc.to_dict()
-            # Convert types as needed; assume Firestore documents match the ExerciseResponse schema.
+            data['id'] = int(data.get('id', 0))
+            data['difficulty'] = int(data.get('difficulty', 1))
+            data['is_public'] = bool(data.get('is_public', True))
+            data['owner_id'] = int(data.get('owner_id', 0))
+            data['favorite_count'] = int(data.get('favorite_count', 0))
+            data['save_count'] = int(data.get('save_count', 0))
+            data['average_rating'] = float(data.get('average_rating', 0.0))
+            # These fields aren't maintained in Firestore so default to False.
+            data['user_has_favorited'] = False
+            data['user_has_saved'] = False
             response_list.append(data)
         return response_list
     

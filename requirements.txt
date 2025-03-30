@@ -9,3 +9,4 @@ bcrypt
 python-jose>=3.0.0
 alembic
 pytest
+firebase-admin

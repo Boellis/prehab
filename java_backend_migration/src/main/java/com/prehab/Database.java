@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.SQLException;
 
-//Database class is responsible for creating a connection to a file-based H2 database and initializing the schema (tables) that mirror our Python backend models.
+// Database class is responsible for creating a connection to a file-based H2 database and initializing the schema (tables) that mirror our Python backend models.
 public class Database {
 
     // H2 connection string: creates "javadb.mv.db" in the project root

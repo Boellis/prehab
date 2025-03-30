@@ -33,7 +33,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitch }) => 
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',      // Center horizontally
-      justifyContent: 'center',  // Center vertically if parent has enough height
       gap: '0.5rem',             // Space between items
       transform: 'scale(1.5)',
       padding: '100px'

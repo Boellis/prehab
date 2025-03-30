@@ -54,7 +54,7 @@ const App: React.FC = () => {
   const showLogo = view === 'login' || view === 'register';
 
   return (
-    <div style={{ display: 'flex', padding: '20rem' ,  transform: 'scale(1.15)', transformOrigin: 'center left', paddingTop: '10rem'}}>
+    <div style={{ display: 'flex', padding: '20rem' ,  transformOrigin: 'center left', paddingTop: '10rem'}}>
       {/* Left side: content */}
       <div style={{ flex: '1', textAlign: 'center' }}>
         <h1>[P]rehab Takehome</h1>
@@ -79,7 +79,7 @@ const App: React.FC = () => {
 
       {/* Right side: logo only on login/register */}
       {showLogo && (
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', transform: 'scale(1.25)',
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', //transform: 'scale(1.25)',
           padding: '100px' }}>
           <img src={logo} alt="Prehab Takehome Logo" style={{ width: '300px', margin: '1rem' }} />
         </div>

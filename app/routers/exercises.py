@@ -1,8 +1,8 @@
 """
-Handles CRUD for Exercises. 
+Handles CRUD for Exercises. Supports fetching from local SQLite or from Firestore when a query parameter is provided.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Request
 from sqlalchemy.orm import Session
 from sqlalchemy import func, distinct
 from typing import List
@@ -16,10 +16,14 @@ from app.schemas.exercise import (
 )
 from app.core.security import get_current_user_id
 
+# Firestore client
+from app.firebase_admin import db_firestore  
+
 router = APIRouter(prefix="/exercises", tags=["Exercises"])
 
 @router.get("/", response_model=List[ExerciseResponse])
 def get_exercises(
+    request: Request,
     db: Session = Depends(get_db),
     current_user_id: int = Depends(get_current_user_id),
     skip: int = Query(0, ge=0),
@@ -29,65 +33,78 @@ def get_exercises(
     Retrieve public exercises and user's private exercises with pagination.
     Uses subqueries to correctly count favorites and saves and calculates average rating.
     """
-    # Subquery for counting favorites
-    favorite_subq = (
-        db.query(
-            Favorite.exercise_id,
-            func.count(Favorite.id).label("favorite_count")
-        )
-        .group_by(Favorite.exercise_id)
-        .subquery()
-    )
-
-    # Subquery for counting saves
-    save_subq = (
-        db.query(
-            Saved.exercise_id,
-            func.count(Saved.id).label("save_count")
-        )
-        .group_by(Saved.exercise_id)
-        .subquery()
-    )
-
-    query = (
-        db.query(
-            Exercise,
-            func.coalesce(favorite_subq.c.favorite_count, 0).label("favorite_count"),
-            func.coalesce(save_subq.c.save_count, 0).label("save_count")
-        )
-        .outerjoin(favorite_subq, favorite_subq.c.exercise_id == Exercise.id)
-        .outerjoin(save_subq, save_subq.c.exercise_id == Exercise.id)
-        .filter((Exercise.is_public == True) | (Exercise.owner_id == current_user_id))
-        .offset(skip)
-        .limit(limit)
-    )
-
-    results = query.all()
-
-    # Get the user's favorite and saved exercise IDs separately
-    user_fav_ids = {fav.exercise_id for fav in db.query(Favorite).filter(Favorite.user_id == current_user_id).all()}
-    user_save_ids = {s.exercise_id for s in db.query(Saved).filter(Saved.user_id == current_user_id).all()}
-
-    response_list = []
-    for (exercise, fav_count, save_count) in results:
-        avg_rating = db.query(func.avg(Rating.rating)).filter(Rating.exercise_id == exercise.id).scalar() or 0.0
-        response_list.append(
-            ExerciseResponse(
-                id=exercise.id,
-                name=exercise.name,
-                description=exercise.description,
-                difficulty=exercise.difficulty,
-                is_public=exercise.is_public,
-                owner_id=exercise.owner_id,
-                favorite_count=fav_count,
-                save_count=save_count,
-                user_has_favorited=(exercise.id in user_fav_ids),
-                user_has_saved=(exercise.id in user_save_ids),
-                average_rating=round(avg_rating, 2)
+    # Fetch from Firestore
+    if request.query_params.get('use_cloud') == 'true':
+        exercises_firestore = db_firestore.collection('exercises').stream()
+        response_list = []
+        for doc in exercises_firestore:
+            data = doc.to_dict()
+            # Convert types as needed; assume Firestore documents match the ExerciseResponse schema.
+            response_list.append(data)
+        return response_list
+    
+    # Fetch from SQLite
+    else:
+        # Subquery for counting favorites
+        favorite_subq = (
+            db.query(
+                Favorite.exercise_id,
+                func.count(Favorite.id).label("favorite_count")
             )
+            .group_by(Favorite.exercise_id)
+            .subquery()
         )
 
-    return response_list
+        # Subquery for counting saves
+        save_subq = (
+            db.query(
+                Saved.exercise_id,
+                func.count(Saved.id).label("save_count")
+            )
+            .group_by(Saved.exercise_id)
+            .subquery()
+        )
+
+        query = (
+            db.query(
+                Exercise,
+                func.coalesce(favorite_subq.c.favorite_count, 0).label("favorite_count"),
+                func.coalesce(save_subq.c.save_count, 0).label("save_count")
+            )
+            .outerjoin(favorite_subq, favorite_subq.c.exercise_id == Exercise.id)
+            .outerjoin(save_subq, save_subq.c.exercise_id == Exercise.id)
+            .filter((Exercise.is_public == True) | (Exercise.owner_id == current_user_id))
+            .offset(skip)
+            .limit(limit)
+        )
+
+        results = query.all()
+
+        # Get the user's favorite and saved exercise IDs separately
+        user_fav_ids = {fav.exercise_id for fav in db.query(Favorite).filter(Favorite.user_id == current_user_id).all()}
+        user_save_ids = {s.exercise_id for s in db.query(Saved).filter(Saved.user_id == current_user_id).all()}
+
+        response_list = []
+        for (exercise, fav_count, save_count) in results:
+            avg_rating = db.query(func.avg(Rating.rating)).filter(Rating.exercise_id == exercise.id).scalar() or 0.0
+            response_list.append(
+                ExerciseResponse(
+                    id=exercise.id,
+                    name=exercise.name,
+                    description=exercise.description,
+                    difficulty=exercise.difficulty,
+                    is_public=exercise.is_public,
+                    owner_id=exercise.owner_id,
+                    favorite_count=fav_count,
+                    save_count=save_count,
+                    user_has_favorited=(exercise.id in user_fav_ids),
+                    user_has_saved=(exercise.id in user_save_ids),
+                    average_rating=round(avg_rating, 2),
+                    video_url=exercise.video_url
+                )
+            )
+
+        return response_list
 
 @router.post("/", response_model=ExerciseResponse)
 def create_exercise(
@@ -103,8 +120,10 @@ def create_exercise(
         description=exercise.description,
         difficulty=exercise.difficulty,
         is_public=exercise.is_public,
-        owner_id=user_id
+        owner_id=user_id,
+        video_url=exercise.video_url
     )
+
     db.add(new_exercise)
     db.commit()
     db.refresh(new_exercise)
@@ -119,7 +138,9 @@ def create_exercise(
         favorite_count=0,
         save_count=0,
         user_has_favorited=False,
-        user_has_saved=False
+        user_has_saved=False,
+        video_url=exercise.video_url
+
     )
 
 @router.get("/{exercise_id}", response_model=ExerciseResponse)
@@ -160,7 +181,9 @@ def get_exercise_by_id(
         save_count=save_count,
         user_has_favorited=user_has_favorited,
         user_has_saved=user_has_saved,
-        average_rating=round(avg_rating, 2)
+        average_rating=round(avg_rating, 2),
+        video_url=exercise.video_url
+
     )
 
 @router.put("/{exercise_id}", response_model=ExerciseResponse)
@@ -211,7 +234,9 @@ def update_exercise(
         save_count=save_count,
         user_has_favorited=user_has_favorited,
         user_has_saved=user_has_saved,
-        average_rating=round(avg_rating, 2)
+        average_rating=round(avg_rating, 2),
+        video_url=exercise.video_url
+
     )
 
 

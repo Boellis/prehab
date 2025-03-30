@@ -16,6 +16,7 @@ class ExerciseBase(BaseModel):
 class ExerciseCreate(ExerciseBase):
 
     # Schema for creating a new exercise. Inherits from ExerciseBase.
+    video_url: Optional[str] = Field(None, example="https://...") 
     pass
 
 class ExerciseUpdate(BaseModel):
@@ -25,6 +26,7 @@ class ExerciseUpdate(BaseModel):
     description: Optional[str] = Field(None, example="Updated Description")
     difficulty: Optional[int] = Field(None, ge=1, le=5, example=2)
     is_public: Optional[bool] = Field(None, example=False)
+    video_url: Optional[str] = Field(None, example="https://...")  
 
 class ExerciseResponse(ExerciseBase):
 
@@ -36,6 +38,8 @@ class ExerciseResponse(ExerciseBase):
     average_rating: float = 0.0 
     user_has_favorited: bool = False
     user_has_saved: bool = False     
+    video_url: Optional[str] = None
+
 
 
 class Config:

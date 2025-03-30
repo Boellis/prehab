@@ -38,7 +38,7 @@ interface ExerciseDashboardProps {
 
 }
 
-export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token , useCloudData = false}) => {
+export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token, useCloudData = false}) => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -55,6 +55,13 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token , us
   const [sortBy, setSortBy] = useState<'difficulty' | 'name' | 'description' | 'favorite_count' | 'save_count'>('difficulty');
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [userLists, setUserLists] = useState<{ [key: number]: { favorited_by: User[]; saved_by: User[] } | null }>({});
+
+  // Retrieve the current user ID from localStorage.
+  const storedUserId = localStorage.getItem('user_id');
+  const currentUserId = storedUserId ? Number(storedUserId) : NaN;
+  console.log("Current user ID:", currentUserId);
+
+
 
   const fetchExercises = async () => {
     try {
@@ -163,7 +170,8 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token , us
     });
 
   return (
-    <div>
+    <div style={{transform: 'scale(1)', transformOrigin: 'center left'}}>
+
       <h2>Exercises Dashboard</h2>
       {/* Create exercise form */}
       <div
@@ -320,25 +328,39 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token , us
 
             {ex.video_url && (
               <div style={{ marginBottom: '0.5rem' }}>
-                  <video width="320" height="240" controls>
-                    <source src={ex.video_url} type="video/mp4" />
-                      Your browser does not support the video tag.
-                  </video>
+                <video width="320" height="240" controls>
+                  <source src={ex.video_url} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               </div>
             )}
-    
-            <div style={{ marginBottom: '0.5rem' }}>
-              <VideoUploader exerciseId={ex.id}
-                onUpload={async (videoUrl) => {
+
+            {Number(ex.owner_id) === currentUserId ? (
+              <div style={{ marginBottom: '0.5rem' }}>
+                <VideoUploader
+                  exerciseId={ex.id}
+                  onUpload={async (videoUrl) => {
                     try {
+                      // Update the backend with the new video URL.
                       await API.put(`/exercises/${ex.id}`, { video_url: videoUrl });
-                        fetchExercises();
+                      // Update local state immediately to display the video.
+                      setExercises((prevExercises) =>
+                        prevExercises.map((e) =>
+                          e.id === ex.id ? { ...e, video_url: videoUrl } : e
+                        )
+                      );
                     } catch (error) {
-                        alert('Failed to update exercise with video URL');
+                      alert('Failed to update exercise with video URL');
                     }
                   }}
                 />
-            </div>
+              </div>
+            ) : (
+              <div style={{ marginBottom: '0.5rem', fontStyle: 'italic', color: '#888' }}>
+                (Only the creator can upload a video.)
+              </div>
+            )}
+
 
             {/* Action buttons (favorite, save, rating, user list, edit, delete) */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.5rem' , padding: '0.5rem', marginTop: '0.25rem', alignItems: 'center',justifyContent: 'center' }}>

@@ -22,6 +22,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitch }) => 
       const res = await API.post('/auth/login', { username, password });
       // On success, invoke onSuccess callback with tokens.
       onSuccess(res.data.access_token, res.data.refresh_token);
+      localStorage.setItem('user_id', String(res.data.user_id));
     } catch {
       alert('Login failed. Please check your credentials.');
     }
@@ -33,7 +34,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onSwitch }) => 
       flexDirection: 'column',
       alignItems: 'center',      // Center horizontally
       justifyContent: 'center',  // Center vertically if parent has enough height
-      gap: '0.5rem'              // Space between items
+      gap: '0.5rem',             // Space between items
+      transform: 'scale(1.5)',
+      padding: '100px'
     }}>
       <h2>Login</h2>
       <input

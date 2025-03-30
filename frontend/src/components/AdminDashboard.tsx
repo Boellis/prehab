@@ -33,8 +33,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ useCloudData, se
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2>Admin Dashboard</h2>
+    <div>
+
+    <h2>Admin Dashboard</h2>
       
       {/* Data Source Toggle Section */}
       <div style={{
@@ -44,7 +45,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ useCloudData, se
         border: '1px solid #ccc',
         padding: '1rem',
         borderRadius: '8px',
-        marginBottom: '2rem'
+        marginBottom: '2rem',
+        
       }}>
         <h3>Data Source Settings</h3>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

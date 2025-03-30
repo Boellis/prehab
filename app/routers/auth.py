@@ -39,7 +39,13 @@ def login(user_create: UserCreate, db: Session = Depends(get_db)):
 
     access_token = create_access_token(subject=str(user.id))
     refresh_token = create_refresh_token(subject=str(user.id))
-    return Token(access_token=access_token, refresh_token=refresh_token)
+    # Return the tokens along with the user_id
+    return Token(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        user_id=user.id
+    )
+
 
 @router.post("/refresh", response_model=Token)
 def refresh_token(request: RefreshTokenRequest, db: Session = Depends(get_db)):
@@ -47,18 +53,14 @@ def refresh_token(request: RefreshTokenRequest, db: Session = Depends(get_db)):
         payload = decode_jwt(request.refresh_token)
     except:
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
-
     if payload.get("scope") != "refresh_token":
         raise HTTPException(status_code=401, detail="Invalid scope for token")
-
     user_id = payload.get("sub")
     if not user_id:
         raise HTTPException(status_code=401, detail="Invalid token payload")
-
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
-
     new_access_token = create_access_token(subject=str(user.id))
     new_refresh_token = create_refresh_token(subject=str(user.id))
-    return Token(access_token=new_access_token, refresh_token=new_refresh_token)
+    return Token(access_token=new_access_token, refresh_token=new_refresh_token, user_id=user.id)

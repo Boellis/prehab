@@ -33,7 +33,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onSwitch 
       flexDirection: 'column',
       alignItems: 'center',      // Center horizontally
       justifyContent: 'center',  // Center vertically if parent has enough height
-      gap: '0.5rem'              // Space between items
+      gap: '0.5rem',             // Space between items
+      transform: 'scale(1.5)',
+      padding: '100px'              
     }}>
       <h2>Register</h2>
       <input

@@ -1,27 +1,22 @@
 /*
 Main App component that manages view switching between login, register, dashboard, and collection.
 */
-
 import React, { useState } from 'react';
 import { LoginForm } from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
 import { ExerciseDashboard } from './components/ExerciseDashboard';
 import { CollectionDashboard } from './components/CollectionDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
-
 import API from './api/axios';
 import logo from './assets/logo.png';
 
 const App: React.FC = () => {
-  // State to store the JWT token.
+  // Token and view state.
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
-  // State to manage the current view: login, register, dashboard, or collection.
   const [view, setView] = useState<'login' | 'register' | 'dashboard' | 'collection' | 'admin'>(token ? 'dashboard' : 'login');
-  // Global toggle for data source: false for local (SQLite), true for cloud (Firestore)
   const [useCloudData, setUseCloudData] = useState(false);
 
-
-  // Handle successful login by saving tokens and switching to the dashboard.
+  // Handlers for login, logout, refresh.
   const handleLogin = (jwt: string, refreshToken: string) => {
     localStorage.setItem('token', jwt);
     localStorage.setItem('refresh_token', refreshToken);
@@ -29,7 +24,6 @@ const App: React.FC = () => {
     setView('dashboard');
   };
 
-  // Logout by clearing tokens and switching back to login view.
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
@@ -37,7 +31,6 @@ const App: React.FC = () => {
     setView('login');
   };
 
-  // Handle token refresh via the backend.
   const handleRefreshToken = async () => {
     const storedRefreshToken = localStorage.getItem('refresh_token');
     if (!storedRefreshToken) {
@@ -45,7 +38,6 @@ const App: React.FC = () => {
       handleLogout();
       return;
     }
-
     try {
       const res = await API.post('/auth/refresh', { refresh_token: storedRefreshToken });
       localStorage.setItem('token', res.data.access_token);
@@ -58,39 +50,40 @@ const App: React.FC = () => {
     }
   };
 
-
+  // Decide whether to show the logo.
+  const showLogo = view === 'login' || view === 'register';
 
   return (
-    <div style={{ display: 'flex', padding: '20rem' ,  transform: 'scale(1.5)', transformOrigin: 'center left'}}>
-      {/* Left side: all text and forms aligned to left */}
+    <div style={{ display: 'flex', padding: '20rem' ,  transform: 'scale(1.15)', transformOrigin: 'center left', paddingTop: '10rem'}}>
+      {/* Left side: content */}
       <div style={{ flex: '1', textAlign: 'center' }}>
         <h1>[P]rehab Takehome</h1>
         {token && (
           <div style={{ marginBottom: '1rem' }}>
-            <button onClick={handleLogout}>Logout</button>
-            <button onClick={handleRefreshToken} style={{ marginLeft: '1rem' }}>Refresh Token</button>
-            <button onClick={() => setView('dashboard')} style={{ marginLeft: '1rem' }}>Dashboard</button>
-            <button onClick={() => setView('collection')} style={{ display: 'flex', padding: '.65rem', marginTop: '1rem',  marginLeft: '8.7rem'  }}>My Collection</button>
-            <button onClick={() => setView('admin')} style={{ marginLeft: '1rem' }}>Admin Dashboard</button>
+            {/* Use a separate NavBar component or inline buttons with consistent style */}
+            <button onClick={handleLogout} style={{ padding: '0.75rem 1rem' }}>Logout</button>
+            <button onClick={handleRefreshToken} style={{ padding: '0.75rem 1rem', marginLeft: '1rem' }}>Refresh Token</button>
+            <button onClick={() => setView('dashboard')} style={{ padding: '0.75rem 1rem', marginLeft: '1rem' }}>Dashboard</button>
+            <button onClick={() => setView('collection')} style={{ padding: '0.75rem 1rem', marginLeft: '1rem' }}>My Collection</button>
+            <button onClick={() => setView('admin')} style={{ padding: '0.75rem 1rem', marginLeft: '1rem' }}>Admin Dashboard</button>
           </div>
         )}
 
+        {/* Render the main view */}
         {view === 'login' && <LoginForm onSuccess={handleLogin} onSwitch={() => setView('register')} />}
         {view === 'register' && <RegisterForm onSuccess={() => setView('login')} onSwitch={() => setView('login')} />}
         {view === 'dashboard' && token && <ExerciseDashboard token={token} useCloudData={useCloudData} />}
         {view === 'collection' && token && <CollectionDashboard />}
         {view === 'admin' && token && <AdminDashboard useCloudData={useCloudData} setUseCloudData={setUseCloudData} />}
-
       </div>
 
-      {/* Right side: Logo on the right half */}
-      <div style={{ flex: '1', display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start' }}>
-        <img 
-          src={logo} 
-          alt="Prehab Takehome Logo" 
-          style={{ width: '300px', margin: '3rem' , marginTop: '0px'}}
-        />
-      </div>
+      {/* Right side: logo only on login/register */}
+      {showLogo && (
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start', transform: 'scale(1.25)',
+          padding: '100px' }}>
+          <img src={logo} alt="Prehab Takehome Logo" style={{ width: '300px', margin: '1rem' }} />
+        </div>
+      )}
     </div>
   );
 };

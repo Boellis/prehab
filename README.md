@@ -2,6 +2,7 @@
 
 This project is a brief showcase of my programming and problem solving skills; built to demonstrate my readiness for the Backend Software Engineer role you all have open on your page. I designed the backend using FastAPI (Python) and the frontend with TypeScript, focusing on creating a project that's secure and scalable. The project also includes a fully functional REST API, JWT-based authentication, and a migration pipeline that transfers data from Java H2 to SQLite using Alembic.
 
+<i>Note: If you just want the backend with a basic frontend so, revert the main branch to commit `f95996a` and you can see everything you need to there with much fewer and simpler instructions. </i>
 
 ## Features
 

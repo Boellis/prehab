@@ -34,8 +34,10 @@ class ExerciseResponse(ExerciseBase):
     favorite_count: int = 0
     save_count: int = 0
     average_rating: float = 0.0 
+    user_has_favorited: bool = False
+    user_has_saved: bool = False     
 
 
-    class Config:
-        orm_mode = True
+class Config:
+    orm_mode = True
 

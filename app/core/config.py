@@ -8,7 +8,7 @@ from pydantic import BaseSettings, Field
 
 class Settings(BaseSettings):
     # Basic application settings
-    PROJECT_NAME: str = Field("Prehab Takehome", env="PROJECT_NAME")
+    PROJECT_NAME: str = Field("[P]rehab Takehome", env="PROJECT_NAME")
     API_VERSION: str = Field("v1", env="API_VERSION")
     
     # Database settings (for this example, we are using SQLite)

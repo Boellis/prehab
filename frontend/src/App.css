@@ -1,9 +1,17 @@
+
+html {
+  font-size: 150%; /* This increases the base font size to 150% of the browser's default */
+}
+
 #root {
-  max-width: 1280px;
+  max-width: 1920px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  transform: scale(1.5);
+  transform-origin: top left; /* Ensures scaling starts from the top left corner */
 }
+
 
 .logo {
   height: 6em;

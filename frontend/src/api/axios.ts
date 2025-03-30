@@ -1,7 +1,6 @@
-/**
-This file sets up an Axios instance for API calls to the backend.
-It automatically includes the JWT token from localStorage in every request.
-**/
+/*
+This file sets up an Axios instance for API calls to the backend. It automatically includes the JWT token from localStorage in every request.
+*/
 
 import axios from 'axios';
 

@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from app.db.models import Exercise
-from app.firebase_admin import db_firestore  # Firestore client
+from app.firebase_setup import db_firestore  # Firestore client
 from app.schemas.exercise import ExerciseResponse
 
 router = APIRouter(prefix="/migrate", tags=["Migrate"])
@@ -21,16 +21,16 @@ def migrate_exercises(db: Session = Depends(get_db)):
     
     for ex in exercises_local:
         doc_data = {
-            "id": ex.id,
-            "name": ex.name,
-            "description": ex.description,
-            "difficulty": ex.difficulty,
-            "is_public": ex.is_public,
-            "owner_id": ex.owner_id,
-            "favorite_count": 0,
-            "save_count": 0,
-            "average_rating": 0.0,
-            "video_url": ex.video_url
+            "id": int(ex.id),
+            "name": str(ex.name),
+            "description": str(ex.description),
+            "difficulty": int(ex.difficulty),
+            "is_public": bool(ex.is_public),
+            "owner_id": int(ex.owner_id),
+            "favorite_count": int(0),
+            "save_count": int(0),
+            "average_rating": float(0.0),
+            "video_url": str(ex.video_url)
         }
         db_firestore.collection('exercises').document(str(ex.id)).set(doc_data)
     

@@ -4,26 +4,32 @@ Provides admin controls for:
 2. Migrating local exercise data to Firestore.
 */
 
-import React, { useState } from 'react';
+import React from 'react';
 import API from '../api/axios';
 
-export const AdminDashboard: React.FC = () => {
-  // State to toggle data source.
-  const [useCloudData, setUseCloudData] = useState(false);
+interface AdminDashboardProps {
+  useCloudData: boolean;
+  setUseCloudData: (value: boolean) => void;
+}
 
+export const AdminDashboard: React.FC<AdminDashboardProps> = ({ useCloudData, setUseCloudData }) => {
   const toggleDataSource = () => {
     setUseCloudData(!useCloudData);
   };
 
-  // Handler to trigger migration from SQLite to Firestore.
   const handleMigrateData = async () => {
     try {
       const res = await API.post('/migrate/exercises');
       alert(res.data.message);
-    } catch (error) {
-      alert('Data migration failed.');
+    } catch (error: any) {
+      alert('Data migration failed: ' + (error.response?.data.detail || error.message));
       console.error(error);
     }
+  };
+
+  const handleUploadCSV = async () => {
+    // Placeholder for CSV upload functionality.
+    alert("CSV upload functionality not yet implemented.");
   };
 
   return (
@@ -57,7 +63,8 @@ export const AdminDashboard: React.FC = () => {
         gap: '1rem',
         border: '1px solid #ccc',
         padding: '1rem',
-        borderRadius: '8px'
+        borderRadius: '8px',
+        marginBottom: '2rem'
       }}>
         <h3>Data Migration</h3>
         <p>
@@ -66,6 +73,25 @@ export const AdminDashboard: React.FC = () => {
         </p>
         <button onClick={handleMigrateData} style={{ padding: '0.5rem 1rem' }}>
           Migrate Data to Cloud
+        </button>
+      </div>
+
+      {/* CSV Upload Section */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+        border: '1px solid #ccc',
+        padding: '1rem',
+        borderRadius: '8px'
+      }}>
+        <h3>CSV Data Upload</h3>
+        <p>
+          Use this section to upload CSV files (generated from our Java migration scripts)
+          and populate the database.
+        </p>
+        <button onClick={handleUploadCSV} style={{ padding: '0.5rem 1rem' }}>
+          Upload CSV Files
         </button>
       </div>
     </div>

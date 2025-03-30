@@ -34,9 +34,11 @@ interface User {
 
 interface ExerciseDashboardProps {
   token: string;
+  useCloudData?: boolean;  // Optional: defaults to false if not provided
+
 }
 
-export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) => {
+export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token , useCloudData = false}) => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -56,7 +58,9 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
 
   const fetchExercises = async () => {
     try {
-      const res = await API.get('/exercises/');
+      const endpoint = useCloudData ? '/exercises?use_cloud=true' : '/exercises/';
+      const res = await API.get(endpoint);
+      console.log("Fetched exercises:", res.data); // Debug log
       setExercises(res.data);
     } catch (error) {
       alert('Failed to load exercises');
@@ -65,7 +69,8 @@ export const ExerciseDashboard: React.FC<ExerciseDashboardProps> = ({ token }) =
 
   useEffect(() => {
     fetchExercises();
-  }, []);
+  }, [useCloudData]);
+
 
   const createExercise = async () => {
     try {

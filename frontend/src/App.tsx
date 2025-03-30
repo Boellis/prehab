@@ -17,6 +17,9 @@ const App: React.FC = () => {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'));
   // State to manage the current view: login, register, dashboard, or collection.
   const [view, setView] = useState<'login' | 'register' | 'dashboard' | 'collection' | 'admin'>(token ? 'dashboard' : 'login');
+  // Global toggle for data source: false for local (SQLite), true for cloud (Firestore)
+  const [useCloudData, setUseCloudData] = useState(false);
+
 
   // Handle successful login by saving tokens and switching to the dashboard.
   const handleLogin = (jwt: string, refreshToken: string) => {
@@ -74,9 +77,9 @@ const App: React.FC = () => {
 
         {view === 'login' && <LoginForm onSuccess={handleLogin} onSwitch={() => setView('register')} />}
         {view === 'register' && <RegisterForm onSuccess={() => setView('login')} onSwitch={() => setView('login')} />}
-        {view === 'dashboard' && token && <ExerciseDashboard token={token} />}
+        {view === 'dashboard' && token && <ExerciseDashboard token={token} useCloudData={useCloudData} />}
         {view === 'collection' && token && <CollectionDashboard />}
-        {view === 'admin' && token && <AdminDashboard />}
+        {view === 'admin' && token && <AdminDashboard useCloudData={useCloudData} setUseCloudData={setUseCloudData} />}
 
       </div>
 

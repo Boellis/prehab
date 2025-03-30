@@ -46,6 +46,7 @@ def get_exercises(
             data['favorite_count'] = int(data.get('favorite_count', 0))
             data['save_count'] = int(data.get('save_count', 0))
             data['average_rating'] = float(data.get('average_rating', 0.0))
+            data['video_url'] = str(data.get('video_url', ""))
             # These fields aren't maintained in Firestore so default to False.
             data['user_has_favorited'] = False
             data['user_has_saved'] = False

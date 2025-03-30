@@ -35,6 +35,18 @@ export const CollectionDashboard: React.FC = () => {
 
   return (
     <div>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+        border: '1px solid #ccc',
+        padding: '1rem',
+        borderRadius: '8px',
+        marginBottom: '2rem',
+        transform: 'scale(1.75)', 
+        
+      }}>
+      <br></br>
       <h2>My Collection (Favorites & Saves)</h2>
       <ul>
         {collection.map((ex) => (
@@ -43,6 +55,7 @@ export const CollectionDashboard: React.FC = () => {
           </li>
         ))}
       </ul>
+    </div>
     </div>
   );
 };

@@ -134,10 +134,75 @@ pytest
   - CRUD for exercises
   - Save, favorite, and rate workflows
 
+## Migration Pipeline: Java H2 to Python SQLite
+
+How to setup the migration pipeline for transferring data from a Java H2 database to a Python SQLite backend using Alembic.
+
+### Prerequisites
+
+- **Java JDK:** Download from [Oracle](https://www.oracle.com/java/technologies/javase-downloads.html) or [OpenJDK](https://openjdk.java.net/).
+- **Apache Maven:** Download and install from [Maven Download](https://maven.apache.org/download.cgi).
+- **Python & pip**
+- **Alembic:** Install via `pip install alembic`.
+
+### Part 1: Java H2 Database
+
+1. **Setup Maven Project:**
+   - The Maven project is currently set up in the `java_backend_migration/` directory.
+      - You can find the generated Maven files in the `/target/` subfolder. 
+   - `pom.xml` includes the H2 dependency.
+
+2. **Database Setup:**
+   - `Database.java` creates the H2 database and the schema.
+   - `InsertSampleData.java` inserts sample data (e.g., user "john_doe", exercise "Push Ups").
+   - `ExportData.java` exports each table to CSV files.
+
+3. **Run Java Application:**
+   ```bash
+   mvn clean package
+   java -cp target/java-backend-migration-1.0.jar com.example.Main
+   ```
+   This creates the H2 database file (javadb.mv.db), inserts sample data, and generates CSV files (users.csv, exercises.csv, etc.).
+   
+5. **Incase you Encounter Errors with H2 Driver during Step 3**
+   - You’ll know because no csv files will generate and you'll have an error like `java.sql.SQLException: No suitable driver found for jdbc:h2:./javadb`.
+   - To fix this you'll:
+      -  Download H2 jar version 2.1.212 from [H2Database](https://www.h2database.com/html/download-archive.html)
+      -  Save your files in a location that is easy to find as you'll have to copy the jar file to your root folder.
+      -  After your files are downloaded, copy the `h2-2.1.212.jar` and save it to your `prehab/java_backend_migration/target/` folder.
+      -  Run `java -cp “target/java-backend-migration-1.0.jar;target/h2-2.1.212.jar” com.prehab.Main` from your root folder to create your h2 db and csv files.
+
+### Part 2: Python Migration
+
+1. **Initialize Alembic**
+   - In the root directory, initialize Alembic: `alembic init alembic`
+  
+2. **Configure Alembic**
+   - In `alembic.ini`, set the database URL: `sqlalchemy.url = sqlite:///./test.db`
+   - Then, in `alembic/env.py`, import your SQLAlchemy Base and set the target metadata:
+      ```
+      from app.db.database import Base  # Adjust the path as needed
+      target_metadata = Base.metadata  # Replace the existing target_metadata variable with this
+      ```
+  
+3. **Create Initial Schema Migration**
+   - From the root directory, run the following commands:
+     ```
+     alembic revision --autogenerate -m "initial schema"
+     alembic upgrade head
+     ```
+  
+3. **Data Migration**
+   - Create a new revision to import CSV data by running the following command in your terminal from the root directory: `alembic revision -m "migrate data from H2 export"`
+   - Edit the generated revision file (for example, see the example code in `alembic/version/bf7224325043_initial_schema.py`) to load CSV files, then save your changes.
+   - Run the migration by running the following command in your terminal from the doot directory: `alembic upgrade head`.
+
+
 ## Notes
-1. Many of the try catch blocks have generic errors rather than explicitly stating what the errors are. With more time, I would detail out each of these.
-2. I'd started integratinig alembic for database schema migration but realized I've crossed over the time limit by a handful of hours.
-   - The summary of that workflow is update SQLAlchemy model(e.g add new column or something similar) --> Generate migration script with `alembic revision --autogenerate -m "message'` --> Apply migration and update db schema with `alembic upgrade head`.
+1. To build out the functionality for yourself, you can do the following and will able to follow the instructions in the README to get the same results.
+  - Remove target folder `prehab/java_backend_migration/target`
+  - Remove alembic folder `prehab/alembic` and alembic.ini from root `prehab/alembic.ini`
+  - Remove test.db from root `prehab/test.db`
 
 ## Setting up the Frontend from Scratch <b>(Not Required for Testing the At Home Assessment)<b>
 1. Open a terminal in your root directory and run the following commands to create a new Vite project:

@@ -18,7 +18,10 @@ This project is a brief showcase of my programming and problem solving skills; b
 - Admin Dashboard with:
    - Data source toggling (local vs. cloud)
    - Data migration from SQLite to Firestore
-   - CSV upload functionality (to process multiple CSVs from Java backend migration)
+   - CSV upload functionality (to process multiple CSVs from Java backend migration) **(In Progress)**
+- Create API, ETL, and Class diagrams **(Up Next)**
+- Implement CI/CD **(Up Next Next)**
+- Implement OpenAI API to create a Prehab exercise program consisting of multiple exercises via natural language **(Up Next Next Next)**
 
 
 
@@ -216,9 +219,10 @@ How to setup the migration pipeline for transferring data from a Java H2 databas
 3. **Run Java Application:**
    ```bash
    mvn clean package
-   java -cp target/java-backend-migration-1.0.jar com.example.Main
+   java -cp target/java-backend-migration-1.0.jar com.prehab.Main
    ```
-   This creates the H2 database file (javadb.mv.db), inserts sample data, and generates CSV files (users.csv, exercises.csv, etc.).
+   This creates the H2 database file (javadb.mv.db), inserts sample data, and generates CSV files (users.csv, exercises.csv, etc.). If that failed for some reason, try running `java -cp target/java-backend-migration-1.0.jar com.prehab` instead before trying to address the issue using step 5.
+
    
 5. **Incase you Encounter Errors with H2 Driver during Step 3**
    - You’ll know because no csv files will generate and you'll have an error like `java.sql.SQLException: No suitable driver found for jdbc:h2:./javadb`.

@@ -1,6 +1,6 @@
 # [P]rehab Take Home
 
-This project is a brief showcase of my programming and problem solving skills; built to demonstrate my readiness for the Backend Software Engineer role you all have open on your page. I designed the backend using FastAPI (Python) and the frontend with TypeScript, focusing on creating a project that's secure and scalable. The project also includes a fully functional REST API, JWT-based authentication, and a migration pipeline that transfers data from Java H2 to SQLite using Alembic.
+This project is a brief showcase of my programming and problem solving skills; built to demonstrate my readiness for the Backend Software Engineer role you all have open on your page. Thank you for giving me the time and opportunity to build this out. I had fun and broke it up into two little hackathon sessions of my own. I designed the backend using FastAPI (Python) and the frontend with TypeScript, focusing on creating a project that's secure and scalable. The project also includes a fully functional REST API, JWT-based authentication, and a migration pipeline that transfers data from Java H2 to SQLite using Alembic.
 
 <i>Note: If you just want the backend with a basic frontend so, revert the main branch to commit `f95996a` and you can see everything you need to there with much fewer and simpler instructions. </i>
 
@@ -267,6 +267,7 @@ How to setup the migration pipeline for transferring data from a Java H2 databas
   - Remove target folder `prehab/java_backend_migration/target`
   - Remove alembic folder `prehab/alembic` and alembic.ini from root `prehab/alembic.ini`
   - Remove test.db from root `prehab/test.db`
+2. The functionality to save and favorite an exercise from firebase isn't built in yet, but you can save/favorite exercises stored locally via SQLite. 
 
 ## Setting up the Frontend from Scratch <b>(Not Required for Testing the At Home Assessment)<b>
 1. Open a terminal in your root directory and run the following commands to create a new Vite project:

@@ -6,7 +6,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore, storage
 
 # Load Firebase service account key (update the path as needed)
-cred = credentials.Certificate("app/serviceAccountKey.json")
+cred = credentials.Certificate("serviceAccountKey.json")
 
 # Initialize Firebase Admin with your project configuration.
 firebase_admin.initialize_app(cred, {

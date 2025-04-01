@@ -183,7 +183,7 @@ yarn dev
 
 ## Unit Tests
 1. Tests are written using pytest.
-  - Ensure `prehab/tests/__init__.py` exists.
+  - Ensure `prehab/app/tests/__init__.py` exists.
 
 2. Ensure you are in the root directory of your project then run the following in your terminal:
 ```

@@ -145,7 +145,7 @@ From the project root, run the following in your terminal:
 ```
 uvicorn app.main:app --reload
 ```
-
+If you find that the page does not load, press `crtl + c` to stop the application then rerun the command above. 
 
 
 
@@ -154,9 +154,10 @@ uvicorn app.main:app --reload
 ```
 cd frontend
 ```
-2. Install Axios by running the following command in your terminal:
+2. Install Axios and Firebase by running the following command in your terminal:
 ```
 npm install axios
+npm install firebase
 ```
 3. Install Node dependencies by running the following in the terminal:
 ```
